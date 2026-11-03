@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7855ed">
+<title>TUNPLAY — Play, Rhyme, Shine!</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900;1000&display=swap');
+
+:root{
+  --purple:#7855ed;
+  --purple-dark:#5633bf;
+  --pink:#ff7fb0;
+  --yellow:#ffda75;
+  --mint:#86e3c1;
+  --blue:#8dcaff;
+  --ink:#302749;
+  --muted:#837994;
+  --bg:#f7f5ff;
+  --line:#ece6f5;
+  --white:#fff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Nunito,system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button,input,textarea,select{-webkit-tap-highlight-color:transparent}
+button{
+  transition:transform .18s,box-shadow .18s,background .18s;
+}
+button:hover:not(:disabled){transform:translateY(-2px)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,a:focus-visible{
+  outline:3px solid #e65c9c;
+  outline-offset:4px;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--purple);
+  box-shadow:0 0 0 4px #7855ed12;
+}
+svg{display:block}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:29px;letter-spacing:-1px;font-weight:1000;margin-bottom:7px}
+h2{font-size:20px;font-weight:1000}
+h3{font-size:16px;font-weight:900}
+button svg{pointer-events:none}
+.app{display:flex;max-width:1660px;margin:auto;min-height:100vh}
+.sidebar{
+  width:246px;flex-shrink:0;background:#fff;
+  padding:31px 20px;border-right:1px solid var(--line);
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;
+}
+.brand{display:flex;gap:11px;align-items:center;padding:0 8px;margin-bottom:35px}
+.brand-icon{
+  height:43px;width:43px;background:var(--purple);
+  border-radius:15px;display:grid;place-items:center;color:white;
+  font-size:27px;font-weight:1000;transform:rotate(-9deg);
+  box-shadow:4px 5px 0 #d5c7ff;
+}
+.brand strong{font-size:25px;letter-spacing:-1.2px;font-weight:1000}
+.brand small{display:block;color:var(--muted);font-size:8px;letter-spacing:1.1px;font-weight:900}
+.nav-label{font-size:10px;letter-spacing:1.8px;color:#aaa0ba;font-weight:900;padding:0 13px}
+.nav{display:grid;gap:8px;margin-top:12px}
+.nav button{
+  display:flex;align-items:center;gap:12px;
+  border:0;background:none;color:var(--muted);
+  padding:14px 12px;text-align:left;border-radius:15px;
+}
+.nav button.active{background:#eee7ff;color:var(--purple)}
+.nav-icon{
+  height:36px;width:36px;flex-shrink:0;display:grid;place-items:center;
+  background:#f6f3fb;border-radius:12px;font-size:21px;
+}
+.nav button.active .nav-icon{background:white;box-shadow:0 4px 10px #7855ed12}
+.nav strong{font-size:12px;display:block}
+.nav small{font-size:9px;display:block;margin-top:3px;opacity:.75}
+.sidebar-note{
+  margin-top:auto;padding:18px;border-radius:20px;
+  background:linear-gradient(130deg,#fff2cf,#ffe4ed);
+}
+.sidebar-note strong{font-size:13px}
+.sidebar-note p{font-size:11px;line-height:1.8;color:#927d82;margin:8px 0 0}
+main{padding:27px 36px 50px;min-width:0;flex:1}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:27px;gap:10px}
+.breadcrumb{font-size:12px;color:var(--muted)}
+.breadcrumb b{color:var(--ink)}
+.profile{display:flex;align-items:center;gap:10px}
+.pill{
+  background:white;border:1px solid var(--line);padding:8px 12px;
+  border-radius:30px;font-size:11px;font-weight:900;white-space:nowrap;
+}
+.avatar{width:39px;height:39px;background:#ffe3a3;display:grid;place-items:center;border-radius:13px;font-size:23px}
+.mobile-brand{display:none}
+.page{display:none;animation:enter .3s ease}
+.page.active{display:block}
+@keyframes enter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:23px}
+.sub{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:0}
+.tag{display:inline-block;border-radius:7px;padding:5px 8px;font-size:9px;font-weight:1000;letter-spacing:.7px}
+.tag.purple{background:#eee7ff;color:var(--purple)}
+.tag.yellow{background:#fff0c0;color:#947125}
+.tag.pink{background:#ffe5ef;color:#b7527c}
+.tag.green{background:#e1f7ec;color:#348466}
+.hero{
+  background:linear-gradient(120deg,#7855ed,#9168ef);
+  border-radius:27px;padding:30px 34px;min-height:288px;
+  color:white;position:relative;overflow:hidden;isolation:isolate;
+}
+.hero:before{
+  content:"";position:absolute;width:370px;height:370px;
+  border-radius:50%;border:50px solid #ffffff09;
+  top:-75px;right:-35px;z-index:-1;
+}
+.hero-copy{position:relative;max-width:61%;z-index:2}
+.hero .eyebrow{
+  font-size:10px;border:1px solid #ffffff40;background:#ffffff13;
+  padding:6px 10px;border-radius:20px;font-weight:900;display:inline-block;
+}
+.hero h2{font-size:38px;line-height:1.14;letter-spacing:-1.2px;margin:16px 0 12px}
+.hero h2 span{color:var(--yellow)}
+.hero p{font-size:12px;color:#eee5ff;line-height:1.8;max-width:310px}
+.mascot-scene{position:absolute;right:32px;bottom:0;width:267px;height:267px}
+.mascot{
+  width:100%;height:100%;filter:drop-shadow(0 12px 4px #3b246820);
+  animation:float 3.8s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-9px) rotate(2deg)}}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes blink{0%,43%,47%,100%{transform:scaleY(1)}45%{transform:scaleY(.1)}}
+.waving{transform-origin:188px 125px;animation:wave 2.5s infinite}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
+.bubble{
+  position:absolute;top:4px;right:5px;z-index:3;
+  background:white;color:var(--purple);padding:10px 15px;
+  border-radius:15px;font-size:12px;font-weight:1000;transform:rotate(5deg);
+  box-shadow:0 5px 0 #3b246822;
+}
+.spark{position:absolute;font-size:30px;color:var(--yellow)}
+.spark.one{top:45px;left:5px}.spark.two{right:3px;bottom:50px;color:#ffb9d4}
+.btn{
+  border:0;border-radius:12px;padding:12px 17px;min-height:42px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-size:12px;font-weight:900;
+}
+.btn.primary{background:var(--purple);color:white;box-shadow:0 4px 0 #5835ba}
+.btn.yellow{background:var(--yellow);color:#71501c;box-shadow:0 4px 0 #ddb24d}
+.btn.soft{background:#eee7ff;color:var(--purple)}
+.btn.white{background:#fff;color:var(--ink)}
+.btn.outline{background:#fff;border:1px solid #e2d8ef;color:var(--ink)}
+.btn.danger{background:#ffe9ef;color:#b94a6a}
+.btn.small{padding:8px 11px;min-height:33px;font-size:10px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:19px 0 27px}
+.stat{
+  background:white;border:1px solid var(--line);padding:17px;
+  border-radius:18px;display:flex;align-items:center;gap:13px;
+}
+.stat-icon{width:43px;height:43px;display:grid;place-items:center;font-size:22px;border-radius:14px}
+.stat b{font-size:23px;font-weight:1000}
+.stat small{display:block;font-size:10px;color:var(--muted)}
+.lavender{background:#eee5ff}.peach{background:#fff0d2}.mint{background:#def7ed}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:24px 0 14px}
+.section-title h2{margin:0;font-size:18px}
+.panel{background:white;padding:23px;border:1px solid var(--line);border-radius:22px}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:19px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.learning-card{border:0;border-radius:21px;padding:22px;text-align:left;color:var(--ink)}
+.learning-card .big-icon{font-size:31px;display:block;margin-bottom:15px}
+.learning-card h3{margin-bottom:7px}
+.learning-card p{font-size:11px;line-height:1.8;color:#776a8d;margin-bottom:0}
+.learning-card:nth-child(1){background:#eee5ff}
+.learning-card:nth-child(2){background:#ffe3ee}
+.learning-card:nth-child(3){background:#dcf5e9}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{
+  border:1px solid var(--line);background:#fff;color:var(--muted);
+  border-radius:11px;padding:9px 13px;font-weight:900;font-size:11px;
+}
+.tabs button.active{background:var(--purple);color:white;border-color:var(--purple)}
+.lesson{display:none}.lesson.active{display:block}
+.lesson p{font-size:12px;line-height:1.9;color:var(--muted)}
+.poem-example{
+  background:#f5f0ff;padding:18px;border-radius:14px;
+  white-space:pre-line;font-size:13px;line-height:2;
+}
+.notice{font-size:10px;line-height:1.8;color:var(--muted);margin-top:13px}
+.answer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:17px 0}
+.answer{
+  padding:14px;border:2px solid #ede5f8;border-radius:12px;
+  background:white;font-weight:800;color:var(--ink);
+}
+.answer.correct{border-color:#62cba1;background:#e6f9ee}
+.answer.wrong{border-color:#f29aba;background:#fff0f5}
+.feedback-text{font-size:12px;line-height:1.8;min-height:22px}
+.game-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}
+.game-bar strong{font-size:13px}
+.sort-list{display:grid;gap:9px;margin-top:17px}
+.sort-row{
+  background:#f6f2ff;border:1px solid #e7dff4;border-radius:12px;
+  padding:12px;display:flex;align-items:center;gap:9px;cursor:grab;
+}
+.sort-row .line-text{font-size:12px;flex:1;line-height:1.6}
+.sort-row .sort-number{color:var(--purple);font-size:11px;font-weight:1000}
+.sort-row button{border:0;background:white;border-radius:7px;width:26px;height:27px;color:var(--purple)}
+.sort-row.dragging{opacity:.4}
+.field-label{display:block;font-weight:900;font-size:12px;margin-bottom:8px}
+input,select,textarea{
+  width:100%;border:1px solid #e6def1;border-radius:11px;
+  padding:12px;background:#fcfaff;color:var(--ink);font-size:12px;
+}
+textarea{resize:vertical;line-height:1.9;min-height:120px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:17px 0}
+.group-label{font-size:9px;font-weight:1000;letter-spacing:1px;color:var(--muted);margin:18px 0 8px}
+.editor-line{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.editor-line .number{
+  width:28px;height:28px;background:#eee6ff;display:grid;place-items:center;
+  border-radius:8px;color:var(--purple);font-size:11px;font-weight:1000;flex-shrink:0;
+}
+.editor-line.content .number{background:#ffe4ee;color:#c85381}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chip{border:0;background:#eee8ff;color:#7754c9;padding:7px 11px;border-radius:20px;font-size:11px;font-weight:800}
+.small-mascot{width:75px;height:75px;flex-shrink:0}
+.coach-heading{display:flex;align-items:center;gap:12px}
+.coach-heading h3{margin:0 0 5px}
+.coach-heading small{color:var(--muted);font-size:10px}
+.coach-stage{
+  border-radius:22px;background:linear-gradient(135deg,#eee4ff,#ffe4f0);
+  padding:20px;text-align:center;overflow:hidden;
+}
+.coach-stage svg{width:190px;height:190px;margin:auto}
+.coach-stage.happy svg{animation:happy .5s ease 2}
+@keyframes happy{50%{transform:translateY(-12px) rotate(-5deg)}}
+.coach-speech{background:white;padding:13px;border-radius:15px;font-size:12px;line-height:1.8}
+.feedback-item{background:#f5f1fc;border-radius:12px;padding:14px;margin-bottom:10px;font-size:12px;line-height:1.8}
+.feedback-item.good{background:#e7f8ef}
+.feedback-item.warn{background:#fff4d9}
+.progress{height:8px;border-radius:10px;background:#ede6f8;overflow:hidden;margin-top:10px}
+.progress span{height:100%;display:block;background:linear-gradient(90deg,#9062ee,#ff94bd);border-radius:10px}
+.battle-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.timer{font-size:19px;font-weight:1000;background:#fff1cd;border-radius:12px;padding:7px 13px}
+.chat{
+  height:340px;overflow:auto;padding:16px;background:#f7f3ff;
+  border-radius:16px;margin:18px 0;display:flex;flex-direction:column;gap:12px;
+}
+.message{
+  background:white;border:1px solid #e9e0f6;padding:13px;
+  border-radius:15px 15px 15px 3px;max-width:90%;
+  font-size:12px;line-height:1.9;align-self:flex-start;white-space:pre-line;
+}
+.message.me{background:var(--purple);border:0;color:white;align-self:flex-end;border-radius:15px 15px 3px 15px}
+.message.system{align-self:center;font-size:10px;background:#eee6ff;border:0;white-space:normal;text-align:center}
+.message b{display:block;font-size:9px;opacity:.65;margin-bottom:5px}
+.message audio{width:100%;max-width:240px;margin-top:10px}
+.battle-result{display:none;margin-top:18px}
+.battle-result.show{display:block}
+.rec-status{font-size:11px;color:#ad4d75;margin-top:9px}
+.history-list{display:grid;gap:9px;margin-top:12px}
+.history-item{padding:12px;background:#f7f3fd;border-radius:11px;font-size:11px;line-height:1.8}
+.collection{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+.poem-card{border:1px solid var(--line);border-top:5px solid var(--purple);background:white;border-radius:19px;padding:20px}
+.poem-card:nth-child(3n+2){border-top-color:var(--pink)}
+.poem-card:nth-child(3n){border-top-color:var(--mint)}
+.poem-card h3{margin:10px 0}
+.poem-card .text{white-space:pre-line;font-size:12px;line-height:2}
+.poem-card small{font-size:10px;color:var(--muted)}
+.empty{text-align:center;padding:35px 20px;border:2px dashed #e6dbf5;border-radius:18px;grid-column:1/-1}
+.empty p{font-size:12px;color:var(--muted)}
+.radar{width:100%;max-width:290px;margin:0 auto}
+.radar text{font-family:inherit;font-size:10px;fill:#857494;font-weight:800}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.badge{background:#f4effb;border-radius:15px;padding:12px;font-size:10px;text-align:center;flex:1;min-width:82px;opacity:.45}
+.badge.earned{background:#fff0c6;opacity:1}
+.badge span{font-size:25px;display:block;margin-bottom:5px}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:11px;font-weight:900;color:var(--purple)}
+dialog{max-width:440px;width:92%;padding:24px;border:0;border-radius:22px;color:var(--ink)}
+dialog::backdrop{background:#2b1c4e77;backdrop-filter:blur(5px)}
+dialog img{max-width:100%;border-radius:14px}
+dialog p{font-size:12px;line-height:1.8;color:var(--muted)}
+.toast{
+  position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);
+  background:#342748;color:white;padding:13px 19px;border-radius:14px;
+  font-size:12px;font-weight:800;opacity:0;pointer-events:none;
+  transition:.2s;z-index:100;max-width:90vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{text-align:center;color:#a99bb9;font-size:10px;margin-top:28px}
+.hidden{display:none!important}
+
+@media(max-width:1100px){
+  .sidebar{width:215px;padding:27px 13px}
+  main{padding:25px}
+  .mascot-scene{width:230px;height:230px;right:5px}
+  .hero h2{font-size:33px}
+  .brand strong{font-size:23px}
+}
+@media(max-width:800px){
+  .sidebar{
+    position:fixed;top:auto;bottom:0;width:100%;height:78px;
+    padding:6px 7px;background:#ffffffee;backdrop-filter:blur(16px);
+    z-index:50;border-top:1px solid var(--line);border-right:0;
+  }
+  .sidebar .brand,.nav-label,.sidebar-note{display:none}
+  .nav{display:flex;justify-content:space-around;gap:3px;margin:0}
+  .nav button{padding:5px 4px;flex-direction:column;gap:4px;flex:1;border-radius:11px}
+  .nav strong{font-size:8px}
+  .nav small{display:none}
+  .nav-icon{height:29px;width:32px;font-size:19px;border-radius:9px;background:transparent}
+  main{padding:20px 18px 105px}
+  .breadcrumb{display:none}
+  .mobile-brand{display:block;font-weight:1000;font-size:22px;letter-spacing:-1px}
+  .topbar{margin-bottom:23px}
+  .profile{gap:6px}
+  .pill{padding:7px 9px;font-size:10px}
+  .avatar{display:none}
+  h1{font-size:24px}
+  .heading{align-items:flex-start}
+  .hero{padding:26px;min-height:285px}
+  .hero-copy{max-width:65%}
+  .hero h2{font-size:33px}
+  .hero p{font-size:11px;max-width:220px}
+  .mascot-scene{width:183px;height:183px;right:-9px;bottom:4px}
+  .bubble{font-size:10px;right:15px}
+  .stats{gap:8px}
+  .stat{padding:12px 9px;gap:8px}
+  .stat-icon{width:32px;height:32px;font-size:18px}
+  .stat b{font-size:19px}
+  .stat small{font-size:8px}
+  .grid2{grid-template-columns:1fr}
+  .grid3{gap:9px}
+  .learning-card{padding:15px 12px}
+  .learning-card h3{font-size:12px}
+  .learning-card p{font-size:10px}
+  .learning-card .big-icon{font-size:26px}
+  .panel{padding:18px}
+  .collection{grid-template-columns:1fr}
+  .toast{bottom:92px}
+}
+@media(max-width:390px){
+  .hero{padding:23px 20px}
+  .hero h2{font-size:29px}
+  .hero-copy{max-width:70%}
+  .mascot-scene{width:151px;height:151px}
+  .stat-icon{display:none}
+  .stat{justify-content:center;text-align:center}
+  .nav strong{font-size:7px}
+  .grid3{grid-template-columns:1fr}
+  .learning-card{display:flex;align-items:center;gap:13px}
+  .learning-card .big-icon{margin:0}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+<!-- Maskot orisinal berbasis SVG: TUNU -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <linearGradient id="bodyGradient" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#ffe397"/>
+    <stop offset="1" stop-color="#ffbb61"/>
+  </linearGradient>
+  <linearGradient id="hatGradient" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#b8f8d5"/>
+    <stop offset="1" stop-color="#51bda4"/>
+  </linearGradient>
+
+  <symbol id="tunu" viewBox="0 0 250 250">
+    <ellipse cx="125" cy="225" rx="68" ry="10" fill="#41236f" opacity=".14"/>
+    <path d="M91 190L82 215Q73 225 94 223L106 216L110 192"
+      fill="#6841b4" stroke="#483277" stroke-width="3"/>
+    <path d="M145 190L150 215Q146 228 168 222L173 216L165 191"
+      fill="#6841b4" stroke="#483277" stroke-width="3"/>
+    <path d="M66 124Q46 123 38 151"
+      fill="none" stroke="#b77a40" stroke-width="17" stroke-linecap="round"/>
+    <path d="M66 124Q46 123 38 151"
+      fill="none" stroke="#ffd27a" stroke-width="12" stroke-linecap="round"/>
+
+    <g class="waving">
+      <path d="M183 127Q205 120 209 97"
+        fill="none" stroke="#b77a40" stroke-width="17" stroke-linecap="round"/>
+      <path d="M183 127Q205 120 209 97"
+        fill="none" stroke="#ffd27a" stroke-width="12" stroke-linecap="round"/>
+      <path d="M208 98L202 86M210 98L216 85M211 100L224 96"
+        stroke="#ffd27a" stroke-width="6" stroke-linecap="round"/>
+    </g>
+
+    <rect x="63" y="77" width="123" height="126" rx="36"
+      fill="url(#bodyGradient)" stroke="#b77a40" stroke-width="3"/>
+    <path d="M75 99Q78 90 89 91" fill="none" stroke="#fff1c8"
+      stroke-width="6" stroke-linecap="round" opacity=".8"/>
+    <path d="M67 159Q125 175 182 158L182 183Q182 203 159 204H91Q68 202 67 184Z"
+      fill="#f985ad"/>
+    <path d="M71 181H178" stroke="#ffd4e5" stroke-width="4" stroke-dasharray="5 5"/>
+    <path d="M124 169V202" stroke="#de6090" stroke-width="3"/>
+    <g class="eye"><ellipse cx="96" cy="119" rx="8" ry="11" fill="#3c2d50"/>
+      <circle cx="99" cy="115" r="3" fill="white"/></g>
+    <g class="eye"><ellipse cx="153" cy="119" rx="8" ry="11" fill="#3c2d50"/>
+      <circle cx="156" cy="115" r="3" fill="white"/></g>
+    <ellipse cx="83" cy="135" rx="12" ry="7" fill="#f58d93" opacity=".7"/>
+    <ellipse cx="165" cy="135" rx="12" ry="7" fill="#f58d93" opacity=".7"/>
+    <path d="M111 134Q125 152 140 133" fill="#783c51" stroke="#783c51" stroke-width="3"/>
+    <path d="M119 143Q125 139 132 142" stroke="#ff99a7" stroke-width="5" stroke-linecap="round"/>
+    <path d="M64 82L77 43L111 56L146 25L180 68L186 84Z"
+      fill="url(#hatGradient)" stroke="#398574" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M78 45L122 73L146 26L161 65"
+      fill="#b6f2d3" stroke="#398574" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M65 80Q126 68 185 80V91Q125 79 65 92Z"
+      fill="#4fbd9f" stroke="#398574" stroke-width="3"/>
+    <path d="M100 81L108 76L116 81L108 86Z" fill="#ffe59a"/>
+    <path d="M135 80L143 76L151 80L143 85Z" fill="#ffe59a"/>
+    <g transform="rotate(-13 45 160)">
+      <rect x="31" y="149" width="42" height="38" rx="6" fill="#fff7df" stroke="#ceae70" stroke-width="2"/>
+      <path d="M40 159H63M40 166H63M40 173H56" stroke="#a58bc1" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </symbol>
+</defs>
+</svg>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">t.</span>
+    <div><strong>TUNPLAY<span style="color:var(--pink)">.</span></strong>
+      <small>PLAY, RHYME, SHINE!</small></div>
+  </div>
+
+  <div class="nav-label">YOUR CREATIVE PLAYGROUND</div>
+  <nav class="nav" aria-label="Lima fitur utama">
+    <button class="active" data-page="verse">
+      <span class="nav-icon">🪐</span>
+      <span><strong>PantunVerse</strong><small>Explore & learn</small></span>
+    </button>
+    <button data-page="lab">
+      <span class="nav-icon">🎨</span>
+      <span><strong>PantunLab</strong><small>Create your rhyme</small></span>
+    </button>
+    <button data-page="coach">
+      <span class="nav-icon">✨</span>
+      <span><strong>TUNU Coach</strong><small>Your practice buddy</small></span>
+    </button>
+    <button data-page="battle">
+      <span class="nav-icon">⚔️</span>
+      <span><strong>Battle Arena</strong><small>Ready, set, rhyme!</small></span>
+    </button>
+    <button data-page="journey">
+      <span class="nav-icon">🏆</span>
+      <span><strong>My Journey</strong><small>Celebrate your progress</small></span>
+    </button>
+  </nav>
+
+  <div class="sidebar-note">
+    <strong>Small words. Big stories. 💜</strong>
+    <p>Satu pantun hari ini, satu langkah mengenal budaya kita.</p>
+  </div>
+</aside>
+
+<main>
+  <header class="topbar">
+    <div class="breadcrumb">Ruang kreatifmu &nbsp;/&nbsp; <b id="crumb">PantunVerse</b></div>
+    <div class="mobile-brand">TUNPLAY<span style="color:var(--pink)">.</span></div>
+    <div class="profile">
+      <span class="pill">⚡ <span id="header-xp">0</span> XP</span>
+      <span class="pill">🔥 <span id="header-streak">0</span> hari</span>
+      <span class="avatar">😎</span>
+    </div>
+  </header>
+
+  <!-- 1. PANTUNVERSE -->
+  <section class="page active" id="verse">
+    <div class="heading">
+      <div><h1>Your words, your superpower! 👋</h1>
+        <p class="sub">Belajar, bereksperimen, dan berpantun bareng TUNU.</p></div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">✦ WELCOME TO PANTUNVERSE</span>
+        <h2>Play a little.<br>Rhyme a little.<br><span>Shine a lot.</span></h2>
+        <p>Jelajahi dunia pantun dengan cara yang seru. Setiap kata punya cerita!</p>
+        <button class="btn yellow" id="start-learning">Mulai petualangan ↗</button>
+      </div>
+      <div class="mascot-scene">
+        <div class="bubble">Hai! Aku TUNU 💜</div>
+        <span class="spark one">✦</span><span class="spark two">✿</span>
+        <svg class="mascot" role="img" aria-label="TUNU, maskot ceria dengan tanjak hijau">
+          <use href="#tunu"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="stat-icon lavender">🌟</span>
+        <div><b id="level-stat">1</b><small>Level kreatifmu</small></div></div>
+      <div class="stat"><span class="stat-icon peach">📝</span>
+        <div><b id="poem-stat">0</b><small>Karya tersimpan</small></div></div>
+      <div class="stat"><span class="stat-icon mint">🎯</span>
+        <div><b id="game-stat">0</b><small>Latihan dituntaskan</small></div></div>
+    </div>
+
+    <div class="section-title"><h2>Pilih cara belajarmu</h2><span>🌈</span></div>
+    <div class="grid3">
+      <button class="learning-card" data-learning="rhyme">
+        <span class="big-icon">🎧</span>
+        <div><h3>Tebak Rima</h3><p>Temukan pasangan bunyi yang selaras.</p></div>
+      </button>
+      <button class="learning-card" data-learning="sort">
+        <span class="big-icon">🧩</span>
+        <div><h3>Susun Pantun</h3><p>Rapikan baris menjadi satu pantun.</p></div>
+      </button>
+      <button class="learning-card" data-learning="puzzle">
+        <span class="big-icon">🪄</span>
+        <div><h3>Pantun Puzzle</h3><p>Lengkapi kata yang hilang.</p></div>
+      </button>
+    </div>
+
+    <div class="panel" style="margin-top:20px" id="learning-panel">
+      <div class="tabs" id="learning-tabs">
+        <button class="active" data-lesson="material">Kartu belajar</button>
+        <button data-lesson="rhyme">Tebak rima</button>
+        <button data-lesson="sort">Susun pantun</button>
+        <button data-lesson="puzzle">Puzzle</button>
+        <button data-lesson="culture">Budaya</button>
+      </div>
+
+      <div class="lesson active" id="lesson-material">
+        <span class="tag purple">PANTUN EMPAT BARIS</span>
+        <h2 style="margin:14px 0 8px">Sampiran dulu, pesan kemudian.</h2>
+        <p>Dua baris awal membangun sampiran. Dua baris berikutnya menyampaikan isi.
+          Dalam latihan ini, kita memakai pola rima a-b-a-b.</p>
+        <div class="poem-example" id="sample-poem">Pergi ke pasar membeli ikan
+Pulang membawa buah kedondong
+Jika sampah kita singkirkan
+Sungai bersih berkat bergotong</div>
+        <div class="actions">
+          <button class="btn soft" id="speak-example">🔊 Dengarkan</button>
+          <button class="btn outline" id="stop-speech">Hentikan audio</button>
+          <button class="btn primary" data-page="lab">Coba menulis ↗</button>
+        </div>
+        <p class="notice">Contoh buatan aplikasi. Audio memakai suara sintetis browser,
+          bukan rekaman penutur tradisi. Ketersediaan suara Indonesia bergantung perangkat.</p>
+      </div>
+
+      <div class="lesson" id="lesson-rhyme">
+        <div class="game-bar"><strong id="rhyme-level"></strong><span class="tag yellow">+15 XP / SOAL BARU</span></div>
+        <h2 id="rhyme-question"></h2>
+        <div class="answer-grid" id="rhyme-answers"></div>
+        <div id="rhyme-feedback" class="feedback-text" aria-live="polite"></div>
+        <button class="btn soft" id="next-rhyme">Soal berikutnya →</button>
+      </div>
+
+      <div class="lesson" id="lesson-sort">
+        <div class="game-bar"><strong>Susun sampiran dan isi</strong><span class="tag pink">+20 XP</span></div>
+        <p>Geser baris untuk mengurutkan. Di HP, gunakan tombol ↑ dan ↓.
+          Susun sesuai pasangan makna dan rima pada contoh latihan.</p>
+        <div class="sort-list" id="sort-game"></div>
+        <div class="actions">
+          <button class="btn primary" id="check-sort">Periksa susunan</button>
+          <button class="btn outline" id="shuffle-sort">Acak ulang</button>
+        </div>
+        <div class="feedback-text" id="sort-feedback" aria-live="polite"></div>
+      </div>
+
+      <div class="lesson" id="lesson-puzzle">
+        <div class="game-bar"><strong>Pilih kata yang hilang</strong><span class="tag green">+20 XP</span></div>
+        <div class="poem-example">Pergi ke taman pada pagi hari
+Melihat bunga di tepi jalan
+Belajar tekun mengejar ______
+Jangan menyerah menghadapi ujian</div>
+        <div class="answer-grid" id="puzzle-answers">
+          <button class="answer" data-puzzle="mimpi">mimpi</button>
+          <button class="answer" data-puzzle="meja">meja</button>
+          <button class="answer" data-puzzle="pintu">pintu</button>
+          <button class="answer" data-puzzle="hujan">hujan</button>
+        </div>
+        <div id="puzzle-feedback" class="feedback-text" aria-live="polite"></div>
+      </div>
+
+      <div class="lesson" id="lesson-culture">
+        <span class="tag green">KENALI KONTEKSNYA</span>
+        <h2 style="margin-top:14px">Pantun hidup bersama penuturnya.</h2>
+        <p>Pantun dapat digunakan untuk menyapa, menasihati, menghibur, atau berbalas pesan.
+          Pilihan kata dan cara membawakannya perlu memperhatikan pendengar dan suasana.</p>
+        <div class="feedback-item">
+          <b>Misi eksplorasi daerah</b><br>
+          Tanyakan kepada keluarga atau pelaku budaya setempat:
+          kapan pantun digunakan, ungkapan apa yang khas, dan siapa sumber ceritanya?
+        </div>
+        <label class="field-label" for="culture-note">Catatan budaya dari daerahmu</label>
+        <textarea id="culture-note" placeholder="Daerah, nama narasumber dengan izin, contoh penggunaan, dan hal yang kamu pelajari..."></textarea>
+        <button class="btn soft" id="save-culture" style="margin-top:12px">Simpan catatan</button>
+        <p class="notice">Ruang ini merupakan catatan pribadi.
+          Cerita daerah terverifikasi belum dimuat dalam prototipe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. PANTUNLAB STUDIO -->
+  <section class="page" id="lab">
+    <div class="heading">
+      <div><h1>PantunLab Studio 🎨</h1><p class="sub">Racik kata, mainkan bunyi, temukan gayamu.</p></div>
+      <span class="tag pink">CREATE MODE</span>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <label class="field-label" for="title">Judul karya</label>
+        <input id="title" maxlength="90" placeholder="Sepatah Pesan untuk Bumi">
+
+        <div class="field-row">
+          <div><label class="field-label" for="theme">Tema</label>
+            <select id="theme">
+              <option>Lingkungan</option><option>Persahabatan</option>
+              <option>Kampus</option><option>Semangat</option>
+            </select>
+          </div>
+          <div><label class="field-label" for="mode">Mode latihan</label>
+            <select id="mode">
+              <option value="beginner">Pemula</option>
+              <option value="growing">Berkembang</option>
+              <option value="independent" selected>Mandiri</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="feedback-item" id="mode-description">Mandiri: buat sampiran dan isi dengan pesan pilihanmu.</div>
+
+        <label class="field-label" for="intention">Pesan yang ingin disampaikan</label>
+        <input id="intention" maxlength="200" placeholder="Aku ingin mengajak teman menjaga sungai...">
+
+        <div class="group-label">SAMPIRAN · BARIS 1 DAN 2</div>
+        <div class="editor-line"><span class="number">1</span>
+          <input class="poem-line" aria-label="Baris pertama" maxlength="160" placeholder="Tulis baris pertama..."></div>
+        <div class="editor-line"><span class="number">2</span>
+          <input class="poem-line" aria-label="Baris kedua" maxlength="160" placeholder="Tulis baris kedua..."></div>
+
+        <div class="group-label">ISI · BARIS 3 DAN 4</div>
+        <div class="editor-line content"><span class="number">3</span>
+          <input class="poem-line" aria-label="Baris ketiga" maxlength="160" placeholder="Sampaikan pesanmu..."></div>
+        <div class="editor-line content"><span class="number">4</span>
+          <input class="poem-line" aria-label="Baris keempat" maxlength="160" placeholder="Lengkapi isi pantunmu..."></div>
+
+        <div class="actions">
+          <button class="btn primary" id="to-coach">✨ Minta petunjuk TUNU</button>
+          <button class="btn soft" id="save-poem">Simpan karya</button>
+          <button class="btn outline" id="new-poem">Karya baru</button>
+        </div>
+        <p class="notice" id="draft-status" aria-live="polite">Draf disimpan otomatis di browser ini.</p>
+
+        <details>
+          <summary>Susun ulang baris dengan drag & drop</summary>
+          <p class="notice">Isi editor akan mengikuti susunan baru. Tombol ↑ ↓ tersedia untuk layar sentuh.</p>
+          <button class="btn small soft" id="refresh-sort">Muat baris editor</button>
+          <div id="lab-sort" class="sort-list"></div>
+        </details>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="coach-heading">
+            <svg class="small-mascot" aria-hidden="true"><use href="#tunu"/></svg>
+            <div><h3>Kantong kata TUNU</h3><small>Inspirasi kecil untuk ide besarmu.</small></div>
+          </div>
+          <div class="chips" id="word-bank"></div>
+          <p class="notice">Klik kata untuk menambahkannya ke baris terakhir yang kamu pilih.</p>
+          <label class="field-label" for="rhyme-search">Cari pasangan akhir kata</label>
+          <input id="rhyme-search" placeholder="Contoh: hati">
+          <div id="rhyme-results" class="chips"></div>
+          <p class="notice">Pencarian memakai kemiripan huruf akhir dari bank kata terbatas.</p>
+        </div>
+
+        <div class="panel" style="margin-top:17px;background:#fff5dc">
+          <h3>💡 Mulai dari isi</h3>
+          <p class="sub">Tentukan pesan di baris ketiga dan keempat.
+            Setelah itu, bangun sampiran dengan bunyi akhir yang sesuai.</p>
+        </div>
+
+        <div class="panel" style="margin-top:17px">
+          <h3>Riwayat revisi</h3>
+          <div id="lab-history" class="history-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. TUNU AI COACH -->
+  <section class="page" id="coach">
+    <div class="heading">
+      <div><h1>TUNU AI Coach ✨</h1><p class="sub">Petunjuk bertahap. Kreativitas tetap milikmu.</p></div>
+      <span class="tag yellow">DEMO BERBASIS ATURAN</span>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Pantun yang sedang kamu latih</h3>
+        <div class="poem-example" id="coach-poem"></div>
+        <div class="actions">
+          <button class="btn primary" id="analyze">Periksa pantun</button>
+          <button class="btn outline" data-page="lab">Kembali mengedit</button>
+        </div>
+        <div id="coach-feedback" style="margin-top:20px" aria-live="polite"></div>
+        <button class="btn soft hidden" id="more-hint">Buka petunjuk berikutnya →</button>
+
+        <div class="feedback-item" style="margin-top:20px">
+          <b>Refleksi makna dan kesantunan</b><br>
+          <label><input type="checkbox" id="self-clear" style="width:auto">
+            Isi sudah menyampaikan pesan yang aku maksud.</label><br>
+          <label><input type="checkbox" id="self-kind" style="width:auto">
+            Pilihan kata sesuai pendengar dan tidak merendahkan.</label>
+        </div>
+        <p class="notice">Centang refleksi adalah penilaianmu sendiri.
+          Versi lokal ini belum menganalisis makna, kesantunan, atau konteks budaya dengan AI.</p>
+      </div>
+
+      <div>
+        <div class="coach-stage" id="coach-stage">
+          <svg role="img" aria-label="Maskot TUNU"><use href="#tunu"/></svg>
+          <div class="coach-speech" id="coach-speech">Aku bantu melihat susunan dan petunjuk rimanya. Yuk, coba dulu!</div>
+        </div>
+        <div class="panel" style="margin-top:17px">
+          <h3>Tiga tahap bantuan</h3>
+          <p class="sub">① Periksa bentuk dan bunyi akhir.<br>
+            ② Temukan pasangan baris yang perlu diperhatikan.<br>
+            ③ Jelajahi alternatif kata, lalu tentukan sendiri revisinya.</p>
+          <p class="notice">Kemiripan huruf dan hitungan kelompok vokal merupakan perkiraan.
+            Bacalah pantun lantang untuk memeriksa bunyi sebenarnya.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PANTUN BATTLE ARENA -->
+  <section class="page" id="battle">
+    <div class="heading">
+      <div><h1>Pantun Battle Arena ⚔️</h1><p class="sub">Ready, set, rhyme! Balas pesan, bukan sekadar bunyinya.</p></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <div class="battle-head">
+          <h3 style="margin:0">Tiga ronde, banyak cerita.</h3>
+          <span class="timer" id="timer">--:--</span>
+        </div>
+
+        <div class="field-row">
+          <div><label class="field-label" for="battle-mode">Mode</label>
+            <select id="battle-mode">
+              <option value="virtual">AI Battle · demo TUNU</option>
+              <option value="friend">Friend Battle · satu perangkat</option>
+            </select>
+          </div>
+          <div><label class="field-label" for="battle-theme">Tema</label>
+            <select id="battle-theme"><option>Lingkungan</option><option>Persahabatan</option></select>
+          </div>
+        </div>
+
+        <label class="sub">
+          <input type="checkbox" id="timed" style="width:auto">
+          Live challenge · timer 90 detik per giliran
+        </label>
+
+        <div class="actions">
+          <button class="btn primary" id="start-battle">Mulai battle</button>
+          <button class="btn outline" id="end-battle" disabled>Akhiri sesi</button>
+        </div>
+
+        <div class="chat" id="chat" role="log" aria-label="Percakapan battle" aria-live="polite">
+          <div class="message system">Pilih mode untuk memulai latihan.</div>
+        </div>
+
+        <label class="field-label" id="reply-label" for="battle-input">Pantun balasan</label>
+        <textarea id="battle-input" placeholder="Empat baris, pisahkan dengan Enter..." maxlength="700" disabled></textarea>
+
+        <div class="actions">
+          <button class="btn primary" id="send-battle" disabled>Kirim balasan ↗</button>
+          <button class="btn soft" id="record" disabled>🎙 Rekam suara</button>
+          <button class="btn outline hidden" id="remove-record">Hapus rekaman</button>
+        </div>
+        <div class="rec-status" id="record-status" aria-live="polite"></div>
+        <audio id="record-preview" controls class="hidden" style="width:100%;margin-top:10px"></audio>
+
+        <div class="battle-result" id="battle-result"></div>
+      </div>
+
+      <div>
+        <div class="coach-stage">
+          <svg aria-hidden="true"><use href="#tunu"/></svg>
+          <div class="coach-speech" id="battle-task">TUNU siap menemani latihan berbalasmu!</div>
+        </div>
+
+        <div class="panel" style="margin-top:17px">
+          <h3>🎮 Cara bermain</h3>
+          <p class="sub">Baca pesan lawan → tulis empat baris → tambahkan rekaman jika ingin → kirim balasan.</p>
+          <p class="notice">Lawan virtual memakai naskah tetap. Mode teman dimainkan bergantian
+            pada perangkat yang sama. Kode ruang dan multiplayer internet belum tersedia.</p>
+        </div>
+
+        <div class="panel" style="margin-top:17px;background:#fff4d8">
+          <h3>🎙 Voice Battle</h3>
+          <p class="sub">Rekam pembacaan sebagai lampiran pantun.
+            Teks tetap diperlukan untuk pemeriksaan struktur.</p>
+          <p class="notice">Mikrofon memerlukan izin dan browser yang mendukung.
+            Rekaman hanya tersedia selama sesi halaman; tidak ikut disimpan ke portofolio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MY PANTUN JOURNEY -->
+  <section class="page" id="journey">
+    <div class="heading">
+      <div><h1>My Pantun Journey 🏆</h1><p class="sub">Setiap percobaan adalah bagian dari perjalananmu.</p></div>
+      <button class="btn soft" id="export-data">Cadangkan data</button>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <span class="tag purple">YOUR CREATIVE LEVEL</span>
+        <h2 style="margin:13px 0 5px" id="journey-level"></h2>
+        <p class="sub" id="journey-xp"></p>
+        <div class="progress"><span id="xp-progress"></span></div>
+        <div class="badges" id="badges"></div>
+        <p class="notice">Badge diberikan berdasarkan aktivitas latihan, bukan sertifikasi kemampuan.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Skill Radar · jejak latihan</h3>
+        <svg class="radar" viewBox="0 0 300 220" role="img" aria-label="Radar frekuensi aktivitas latihan">
+          <g fill="none" stroke="#e7def3">
+            <polygon points="150,35 230,90 200,180 100,180 70,90"/>
+            <polygon points="150,61 206,99 185,162 115,162 94,99"/>
+            <polygon points="150,87 182,108 170,144 130,144 118,108"/>
+            <path d="M150 115V35M150 115L230 90M150 115L200 180M150 115L100 180M150 115L70 90"/>
+          </g>
+          <polygon id="radar-shape" points="150,115 150,115 150,115 150,115 150,115"
+            fill="#aa85fa55" stroke="#9061ee" stroke-width="3" stroke-linejoin="round"/>
+          <text x="150" y="20" text-anchor="middle">Belajar</text>
+          <text x="239" y="86">Menulis</text>
+          <text x="204" y="202" text-anchor="middle">Revisi</text>
+          <text x="94" y="202" text-anchor="middle">Refleksi</text>
+          <text x="13" y="86">Berbalas</text>
+        </svg>
+        <p class="notice">Skala relatif aktivitas, maksimum lima kegiatan per sumbu.
+          Grafik ini bukan hasil pengukuran mutu pantun.</p>
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Koleksi pantunmu 📚</h2><button class="btn small soft" data-page="lab">+ Berkarya</button></div>
+    <input id="search" type="search" aria-label="Cari pantun" placeholder="Cari judul, tema, atau kata dalam pantun...">
+    <div id="collection" class="collection"></div>
+
+    <div class="panel" style="margin-top:20px">
+      <h3>Riwayat battle</h3>
+      <div id="battle-history" class="history-list"></div>
+    </div>
+    <p class="notice">Data tersimpan pada browser dan perangkat ini.
+      Gunakan cadangan sebelum menghapus data browser.</p>
+  </section>
+
+  <p class="footer">TUNPLAY · Play, Rhyme, Shine! &nbsp; 💜 &nbsp; Budaya kita, cerita kita.</p>
+</main>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<dialog id="confirm-dialog">
+  <h3 id="confirm-title"></h3>
+  <p id="confirm-message"></p>
+  <div class="actions">
+    <button class="btn outline" id="confirm-cancel">Batal</button>
+    <button class="btn primary" id="confirm-ok">Lanjutkan</button>
+  </div>
+</dialog>
+
+<dialog id="card-dialog">
+  <h3>Kartu pantunmu ✨</h3>
+  <img id="card-preview" alt="Kartu pantun digital">
+  <div class="actions">
+    <button class="btn primary" id="download-card">Unduh PNG</button>
+    <button class="btn soft" id="share-card">Bagikan</button>
+    <button class="btn outline" id="close-card">Tutup</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+
+/* ================= UTILITAS ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+const uid = () => globalThis.crypto?.randomUUID?.() ||
+  Date.now()+"-"+Math.random().toString(36).slice(2);
+
+const KEY = "tunplay-five-features-v1";
+const initial = {
+  poems:[], draft:null, xp:0, rewards:[], activityDays:[],
+  battles:[], culture:"",
+  metrics:{learn:0,write:0,revise:0,reflect:0,battle:0}
+};
+let state = structuredClone(initial);
+let storageOK = true;
+
+try{
+  const raw = JSON.parse(localStorage.getItem(KEY) || "null");
+  if(raw && typeof raw === "object"){
+    state = {
+      ...initial,
+      ...raw,
+      poems:Array.isArray(raw.poems) ? raw.poems.filter(p =>
+        p && typeof p.id==="string" &&
+        Array.isArray(p.lines) && p.lines.length===4 &&
+        p.lines.every(x=>typeof x==="string")
+      ) : [],
+      rewards:Array.isArray(raw.rewards)?raw.rewards:[],
+      activityDays:Array.isArray(raw.activityDays)?raw.activityDays:[],
+      battles:Array.isArray(raw.battles)?raw.battles:[],
+      metrics:{...initial.metrics,...raw.metrics},
+      xp:Number.isFinite(raw.xp)?Math.max(0,raw.xp):0
+    };
+  }else{
+    // Migrasi koleksi dari versi BALAS sebelumnya, jika ada.
+    const old = JSON.parse(localStorage.getItem("balas-colourful-v1") || "null");
+    if(Array.isArray(old?.poems)){
+      state.poems = old.poems.filter(p =>
+        p && typeof p.id==="string" && Array.isArray(p.lines) &&
+        p.lines.length===4 && p.lines.every(x=>typeof x==="string")
+      ).map(p=>({...p,versions:Array.isArray(p.versions)?p.versions:[]}));
+    }
+  }
+}catch(e){}
+
+function persist(){
+  try{
+    localStorage.setItem(KEY,JSON.stringify(state));
+    storageOK=true;
+  }catch(e){storageOK=false}
+  return storageOK;
+}
+function localDay(date=new Date()){
+  return [
+    date.getFullYear(),
+    String(date.getMonth()+1).padStart(2,"0"),
+    String(date.getDate()).padStart(2,"0")
+  ].join("-");
+}
+function markActivity(){
+  const day=localDay();
+  if(!state.activityDays.includes(day)) state.activityDays.push(day);
+}
+function streak(){
+  let count=0;
+  const d=new Date();
+  d.setHours(12,0,0,0);
+  if(!state.activityDays.includes(localDay(d))) d.setDate(d.getDate()-1);
+  while(state.activityDays.includes(localDay(d))){
+    count++;d.setDate(d.getDate()-1);
+  }
+  return count;
+}
+function reward(key,points,metric){
+  if(state.rewards.includes(key)) return false;
+  state.rewards.push(key);
+  state.xp+=points;
+  if(metric) state.metrics[metric]=(Number(state.metrics[metric])||0)+1;
+  markActivity();persist();updateStats();
+  toast("+"+points+" XP ✨");
+  return true;
+}
+let toastTimer;
+function toast(text){
+  $("#toast").textContent=text;
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("#toast").classList.remove("show"),3300);
+}
+let pendingConfirm=null;
+function askConfirm(title,message,callback){
+  $("#confirm-title").textContent=title;
+  $("#confirm-message").textContent=message;
+  pendingConfirm=callback;
+  $("#confirm-dialog").showModal();
+}
+$("#confirm-cancel").onclick=()=>$("#confirm-dialog").close();
+$("#confirm-ok").onclick=()=>{
+  const action=pendingConfirm;
+  pendingConfirm=null;
+  $("#confirm-dialog").close();
+  if(action) action();
+};
+$("#confirm-dialog").addEventListener("close",()=>pendingConfirm=null);
+
+const pageNames={
+  verse:"PantunVerse",lab:"PantunLab Studio",coach:"TUNU AI Coach",
+  battle:"Pantun Battle Arena",journey:"My Pantun Journey"
+};
+function navigate(id){
+  if(!pageNames[id]) return;
+  $$(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+  $$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+  $("#crumb").textContent=pageNames[id];
+  if(id==="coach") loadCoach();
+  if(id==="journey") renderJourney();
+  window.scrollTo(0,0);
+}
+$$("[data-page]").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.page)));
+
+function updateStats(){
+  const level=Math.floor(state.xp/100)+1;
+  $("#header-xp").textContent=state.xp;
+  $("#header-streak").textContent=streak();
+  $("#level-stat").textContent=level;
+  $("#poem-stat").textContent=state.poems.length;
+  $("#game-stat").textContent=state.metrics.learn||0;
+}
+function dateLabel(value){
+  const d=new Date(value);
+  return isNaN(d.getTime())?"":d.toLocaleDateString("id-ID",{
+    day:"numeric",month:"short",year:"numeric"
+  });
+}
+
+/* ================= PANTUNVERSE ================= */
+function showLesson(name){
+  $$(".lesson").forEach(el=>el.classList.toggle("active",el.id==="lesson-"+name));
+  $$("[data-lesson]").forEach(el=>el.classList.toggle("active",el.dataset.lesson===name));
+}
+$$("[data-lesson]").forEach(b=>b.onclick=()=>showLesson(b.dataset.lesson));
+$$("[data-learning]").forEach(b=>b.onclick=()=>{
+  showLesson(b.dataset.learning);
+  $("#learning-panel").scrollIntoView({behavior:"smooth",block:"start"});
+});
+$("#start-learning").onclick=()=>{
+  showLesson("material");
+  $("#learning-panel").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+$("#speak-example").onclick=()=>{
+  if(!("speechSynthesis" in window)){
+    toast("Browser ini belum mendukung pembacaan suara.");return;
+  }
+  speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance($("#sample-poem").textContent);
+  utterance.lang="id-ID";utterance.rate=.85;
+  const voice=speechSynthesis.getVoices().find(v=>v.lang.startsWith("id"));
+  if(voice) utterance.voice=voice;
+  utterance.onerror=()=>toast("Suara tidak tersedia. Coba baca pantun lantang.");
+  speechSynthesis.speak(utterance);
+};
+$("#stop-speech").onclick=()=>window.speechSynthesis?.cancel();
+
+const rhymeQuestions=[
+  {word:"hati",options:["melati","hujan","pohon","kawan"],answer:"melati",why:"Hati dan melati memiliki bunyi akhir -ti."},
+  {word:"sayang",options:["buku","pulang","cinta","bersih"],answer:"pulang",why:"Sayang dan pulang memiliki bunyi akhir -ang."},
+  {word:"belajar",options:["berlayar","mentari","teman","bunga"],answer:"berlayar",why:"Belajar dan berlayar memiliki bunyi akhir -ar."},
+  {word:"harapan",options:["senyuman","melati","ilmu","pagi"],answer:"senyuman",why:"Harapan dan senyuman memiliki bunyi akhir -an."}
+];
+let questionIndex=0;
+function renderRhyme(){
+  const q=rhymeQuestions[questionIndex];
+  $("#rhyme-level").textContent=`Soal ${questionIndex+1} dari ${rhymeQuestions.length}`;
+  $("#rhyme-question").textContent=`Kata mana yang cocok berima dengan “${q.word}”?`;
+  $("#rhyme-answers").innerHTML=q.options.map(w=>
+    `<button class="answer" data-answer="${w}">${w}</button>`).join("");
+  $("#rhyme-feedback").textContent="";
+}
+$("#rhyme-answers").onclick=e=>{
+  const button=e.target.closest("[data-answer]");
+  if(!button) return;
+  const q=rhymeQuestions[questionIndex];
+  const correct=button.dataset.answer===q.answer;
+  button.classList.add(correct?"correct":"wrong");
+  $("#rhyme-feedback").textContent=correct
+    ?"Tepat! "+q.why
+    :"Coba dengarkan bunyi akhir masing-masing kata, lalu pilih lagi.";
+  if(correct){
+    $$("#rhyme-answers button").forEach(b=>b.disabled=true);
+    reward("rhyme-"+questionIndex,15,"learn");
+  }
+};
+$("#next-rhyme").onclick=()=>{
+  questionIndex=(questionIndex+1)%rhymeQuestions.length;renderRhyme();
+};
+
+const orderedPoem=[
+  "Pergi ke pasar membeli ikan",
+  "Pulang membawa buah kedondong",
+  "Jika sampah kita singkirkan",
+  "Sungai bersih berkat bergotong"
+];
+let sortValues=[orderedPoem[2],orderedPoem[0],orderedPoem[3],orderedPoem[1]];
+
+function mountSorter(container,values,onChange){
+  container.innerHTML=values.map((line,i)=>`
+    <div class="sort-row" draggable="true" data-index="${i}">
+      <span class="sort-number">${i+1}</span>
+      <span class="line-text">${esc(line||"(baris kosong)")}</span>
+      <button type="button" data-move="-1" aria-label="Pindahkan baris ${i+1} ke atas" ${i===0?"disabled":""}>↑</button>
+      <button type="button" data-move="1" aria-label="Pindahkan baris ${i+1} ke bawah" ${i===values.length-1?"disabled":""}>↓</button>
+    </div>`).join("");
+  let dragging=-1;
+  function move(from,to){
+    if(from<0||to<0||from===to||to>=values.length) return;
+    const next=[...values];
+    next.splice(to,0,next.splice(from,1)[0]);
+    onChange(next);
+  }
+  container.onclick=e=>{
+    const b=e.target.closest("[data-move]");
+    if(!b) return;
+    const from=Number(b.closest(".sort-row").dataset.index);
+    move(from,from+Number(b.dataset.move));
+  };
+  container.ondragstart=e=>{
+    const row=e.target.closest(".sort-row");
+    if(!row) return;
+    dragging=Number(row.dataset.index);
+    row.classList.add("dragging");
+    e.dataTransfer.setData("text/plain",String(dragging));
+    e.dataTransfer.effectAllowed="move";
+  };
+  container.ondragover=e=>e.preventDefault();
+  container.ondrop=e=>{
+    e.preventDefault();
+    const row=e.target.closest(".sort-row");
+    if(row) move(dragging,Number(row.dataset.index));
+  };
+  container.ondragend=()=>container.querySelectorAll(".dragging").forEach(r=>r.classList.remove("dragging"));
+}
+function renderSortGame(){
+  mountSorter($("#sort-game"),sortValues,next=>{sortValues=next;renderSortGame()});
+}
+$("#check-sort").onclick=()=>{
+  const correct=sortValues.every((v,i)=>v===orderedPoem[i]);
+  $("#sort-feedback").textContent=correct
+    ?"Susunan cocok! Sampiran berada di awal, lalu isi mengajak menjaga sungai."
+    :"Belum sesuai contoh. Letakkan perjalanan ke pasar lebih dulu, kemudian pesan menjaga sungai.";
+  if(correct) reward("sort-example",20,"learn");
+};
+$("#shuffle-sort").onclick=()=>{
+  for(let i=sortValues.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [sortValues[i],sortValues[j]]=[sortValues[j],sortValues[i]];
+  }
+  renderSortGame();$("#sort-feedback").textContent="";
+};
+$("#puzzle-answers").onclick=e=>{
+  const b=e.target.closest("[data-puzzle]");
+  if(!b) return;
+  const correct=b.dataset.puzzle==="mimpi";
+  b.classList.add(correct?"correct":"wrong");
+  $("#puzzle-feedback").textContent=correct
+    ?"Mimpi melengkapi pesan dan memberi bunyi akhir -i yang berpasangan dengan hari."
+    :"Cari kata yang sesuai dengan pesan belajar dan bunyi akhir baris pertama.";
+  if(correct){
+    $$("#puzzle-answers button").forEach(x=>x.disabled=true);
+    reward("puzzle-example",20,"learn");
+  }
+};
+$("#culture-note").value=state.culture||"";
+$("#save-culture").onclick=()=>{
+  state.culture=$("#culture-note").value;
+  const ok=persist();
+  toast(ok?"Catatan pribadi disimpan.":"Penyimpanan browser tidak tersedia.");
+};
+
+/* ================= PANTUNLAB ================= */
+const editorLines=$$(".poem-line");
+let editingId=null;
+let lastFocused=0;
+const banks={
+  Lingkungan:["bumi","lestari","hijau","bersih","sungai","damai","pohon","rindang"],
+  Persahabatan:["hati","melati","teman","senyuman","sayang","pulang","bersama","cerita"],
+  Kampus:["belajar","berlayar","buku","ilmu","kawan","harapan","mentari","hari"],
+  Semangat:["mimpi","berani","cahaya","percaya","tujuan","perjuangan","jalan","harapan"]
+};
+const allWords=[...new Set(Object.values(banks).flat().concat([
+  "menanti","sejati","berbagi","pelangi","kenangan","perhatian",
+  "berjuang","terang","berkembang","membaca","bahagia","berjumpa"
+]))];
+
+function readEditor(){
+  return {
+    title:$("#title").value.trim(),
+    theme:$("#theme").value,
+    intention:$("#intention").value.trim(),
+    mode:$("#mode").value,
+    lines:editorLines.map(l=>l.value.trim()),
+    editingId
+  };
+}
+function saveDraft(){
+  state.draft=readEditor();
+  const ok=persist();
+  $("#draft-status").textContent=ok
+    ?"Draf tersimpan otomatis di browser ini."
+    :"Penyimpanan browser tidak tersedia. Salin karyamu sebelum menutup halaman.";
+}
+function renderWords(){
+  $("#word-bank").innerHTML=banks[$("#theme").value].map(w=>
+    `<button class="chip" data-word="${w}">${w}</button>`).join("");
+}
+function insertWord(word){
+  const line=editorLines[lastFocused];
+  const next=line.value+(line.value.trim()?" ":"")+word;
+  if(next.length>160) return;
+  line.value=next;line.focus();saveDraft();
+}
+$("#word-bank").onclick=e=>{
+  const b=e.target.closest("[data-word]");
+  if(b) insertWord(b.dataset.word);
+};
+function lastWord(line){
+  return (String(line).toLowerCase().match(/[a-zà-ÿ]+/g)||[]).pop()||"";
+}
+function suffix(line){return lastWord(line).slice(-2)}
+$("#rhyme-search").oninput=()=>{
+  const word=lastWord($("#rhyme-search").value);
+  const matches=word.length>=2?allWords.filter(w=>w!==word&&suffix(w)===suffix(word)):[];
+  $("#rhyme-results").innerHTML=matches.length
+    ?matches.map(w=>`<button class="chip" data-word="${w}">${w}</button>`).join("")
+    :'<span class="notice">Belum ada pasangan dalam bank kata.</span>';
+};
+$("#rhyme-results").onclick=e=>{
+  const b=e.target.closest("[data-word]");
+  if(b) insertWord(b.dataset.word);
+};
+editorLines.forEach((line,i)=>{
+  line.addEventListener("focus",()=>lastFocused=i);
+  line.addEventListener("input",saveDraft);
+});
+["title","intention"].forEach(id=>$("#"+id).addEventListener("input",saveDraft));
+$("#theme").onchange=()=>{renderWords();saveDraft()};
+
+function describeMode(){
+  const mode=$("#mode").value;
+  $("#mode-description").textContent={
+    beginner:"Pemula: tersedia contoh sampiran. Kamu dapat mengubahnya, lalu melengkapi isi.",
+    growing:"Berkembang: gunakan pesan “mengajak teman terus belajar”, lalu buat sampiran dan isi sendiri.",
+    independent:"Mandiri: buat sampiran dan isi dengan pesan pilihanmu."
+  }[mode];
+}
+$("#mode").onchange=()=>{
+  describeMode();
+  if($("#mode").value==="beginner"&&!editorLines[0].value&&!editorLines[1].value){
+    editorLines[0].value="Pergi ke taman pada pagi hari";
+    editorLines[1].value="Melihat bunga di tepi jalan";
+  }
+  if($("#mode").value==="growing"&&!$("#intention").value)
+    $("#intention").value="Mengajak teman terus belajar";
+  saveDraft();
+};
+function loadDraft(d){
+  if(!d) return;
+  $("#title").value=d.title||"";
+  $("#theme").value=banks[d.theme]?d.theme:"Lingkungan";
+  $("#intention").value=d.intention||"";
+  $("#mode").value=["beginner","growing","independent"].includes(d.mode)?d.mode:"independent";
+  editorLines.forEach((l,i)=>l.value=Array.isArray(d.lines)?String(d.lines[i]||""):"");
+  editingId=state.poems.some(p=>p.id===d.editingId)?d.editingId:null;
+  renderWords();describeMode();renderLabHistory();
+}
+function resetEditor(){
+  editingId=null;
+  $("#title").value="";$("#intention").value="";
+  $("#mode").value="independent";
+  editorLines.forEach(l=>l.value="");
+  $("#lab-sort").replaceChildren();
+  describeMode();renderLabHistory();saveDraft();
+}
+$("#new-poem").onclick=()=>{
+  if(editorLines.some(l=>l.value.trim())){
+    askConfirm("Mulai karya baru?","Draf yang belum disimpan akan dikosongkan. Karya tersimpan tetap ada di My Journey.",resetEditor);
+  }else resetEditor();
+};
+function savePoem(){
+  const draft=readEditor();
+  if(draft.lines.some(l=>!l)){toast("Lengkapi empat baris dahulu.");return}
+  let poem=state.poems.find(p=>p.id===editingId);
+  const now=new Date().toISOString();
+  if(poem){
+    const unchanged=JSON.stringify([poem.title,poem.theme,poem.intention,poem.lines])===
+      JSON.stringify([draft.title||"Pantun Tanpa Judul",draft.theme,draft.intention,draft.lines]);
+    if(unchanged){toast("Belum ada perubahan untuk disimpan.");return}
+    poem.versions=Array.isArray(poem.versions)?poem.versions:[];
+    poem.versions.push({
+      title:poem.title,theme:poem.theme,intention:poem.intention,
+      lines:[...poem.lines],date:poem.updated||poem.date
+    });
+    Object.assign(poem,draft,{id:editingId,title:draft.title||"Pantun Tanpa Judul",updated:now});
+    reward("revision-"+editingId,10,"revise");
+  }else{
+    editingId=uid();
+    poem={...draft,id:editingId,title:draft.title||"Pantun Tanpa Judul",
+      date:now,updated:now,versions:[]};
+    state.poems.unshift(poem);
+    reward("poem-"+editingId,20,"write");
+  }
+  markActivity();saveDraft();updateStats();renderLabHistory();
+  toast(storageOK?"Karya dan revisinya tersimpan 💜":"Tersimpan sementara. Cadangkan data sebelum menutup halaman.");
+}
+$("#save-poem").onclick=savePoem;
+function renderLabHistory(){
+  const poem=state.poems.find(p=>p.id===editingId);
+  const versions=Array.isArray(poem?.versions)?poem.versions:[];
+  $("#lab-history").innerHTML=versions.length
+    ?versions.slice().reverse().map((v,i)=>`
+      <details class="history-item">
+        <summary>Versi ${versions.length-i} · ${dateLabel(v.date)}</summary>
+        <div style="white-space:pre-line">${esc(v.lines.join("\n"))}</div>
+      </details>`).join("")
+    :'<p class="notice">Simpan karya, lalu revisi dan simpan kembali untuk membuat riwayat.</p>';
+}
+function renderLabSort(values){
+  mountSorter($("#lab-sort"),values,next=>{
+    editorLines.forEach((l,i)=>l.value=next[i]);
+    saveDraft();renderLabSort(next);
+  });
+}
+$("#refresh-sort").onclick=()=>renderLabSort(editorLines.map(l=>l.value));
+$("#to-coach").onclick=()=>{saveDraft();navigate("coach")};
+
+/* ================= TUNU COACH ================= */
+let hintStage=0;
+let analysisLines=[];
+function loadCoach(){
+  const d=readEditor();
+  $("#coach-poem").textContent=d.lines.some(Boolean)
+    ?d.lines.map(l=>l||"— baris belum diisi —").join("\n")
+    :"Belum ada pantun. Mulai dari PantunLab Studio.";
+  $("#coach-feedback").replaceChildren();
+  $("#more-hint").classList.add("hidden");
+  $("#self-clear").checked=false;$("#self-kind").checked=false;
+  hintStage=0;
+}
+function basicCheck(lines){
+  return {
+    complete:lines.length===4&&lines.every(l=>l.trim()),
+    pairA:!!suffix(lines[0])&&suffix(lines[0])===suffix(lines[2]),
+    pairB:!!suffix(lines[1])&&suffix(lines[1])===suffix(lines[3]),
+    syllables:lines.map(l=>(l.toLowerCase().match(/[aiueo]+/g)||[]).length)
+  };
+}
+function analyze(){
+  analysisLines=readEditor().lines;
+  const result=basicCheck(analysisLines);
+  if(!result.complete){toast("Isi empat baris di PantunLab terlebih dahulu.");return}
+  hintStage=1;
+  $("#coach-feedback").innerHTML=`
+    <div class="feedback-item good">✅ Empat baris lengkap.
+      Pastikan dua baris akhir menyampaikan isi.</div>
+    <div class="feedback-item ${result.pairA&&result.pairB?"good":"warn"}">
+      🎵 <b>Pasangan akhir tulisan:</b><br>
+      Baris 1–3: ${result.pairA?"mirip":"perlu didengarkan kembali"}.<br>
+      Baris 2–4: ${result.pairB?"mirip":"perlu didengarkan kembali"}.
+    </div>
+    <div class="feedback-item">👂 <b>Perkiraan kelompok vokal:</b>
+      ${result.syllables.join(" · ")}.
+      Hitung ulang suku katanya saat membaca; angka ini bukan analisis pelafalan.</div>`;
+  $("#more-hint").classList.remove("hidden");
+  $("#more-hint").textContent="Petunjuk 2 · Lihat pasangan kata";
+  $("#coach-speech").textContent="Sudah ada bahan bagus untuk dilatih. Sekarang dengarkan hubungan bunyi antarbaris!";
+  $("#coach-stage").classList.remove("happy");
+  void $("#coach-stage").offsetWidth;
+  $("#coach-stage").classList.add("happy");
+}
+$("#analyze").onclick=analyze;
+$("#more-hint").onclick=()=>{
+  if(hintStage===1){
+    $("#coach-feedback").insertAdjacentHTML("beforeend",`
+      <div class="feedback-item">
+        🔎 Bandingkan “${esc(lastWord(analysisLines[0]))}” dengan “${esc(lastWord(analysisLines[2]))}”,
+        lalu “${esc(lastWord(analysisLines[1]))}” dengan “${esc(lastWord(analysisLines[3]))}”.
+        Coba ucapkan setiap pasangan tanpa membaca tulisannya.
+      </div>`);
+    hintStage=2;
+    $("#more-hint").textContent="Petunjuk 3 · Cari alternatif kata";
+  }else{
+    const suggestions=[0,1].map(i=>{
+      const matches=allWords.filter(w=>suffix(w)===suffix(analysisLines[i])&&w!==lastWord(analysisLines[i]));
+      return `Pasangan baris ${i+1}: ${matches.length?matches.join(", "):"coba ganti kata akhir dengan kata dari bank kata"}.`;
+    });
+    $("#coach-feedback").insertAdjacentHTML("beforeend",`
+      <div class="feedback-item">🪄 ${esc(suggestions.join(" "))}<br>
+      Pilih hanya jika kata tersebut tetap sesuai pesanmu.</div>`);
+    $("#more-hint").classList.add("hidden");
+    hintStage=3;
+  }
+};
+function checkReflection(){
+  if($("#self-clear").checked&&$("#self-kind").checked){
+    const d=readEditor();
+    if(!d.lines.every(Boolean)){toast("Lengkapi pantun sebelum mencatat refleksi.");return}
+    reward("reflect-"+d.lines.join("|"),5,"reflect");
+  }
+}
+$("#self-clear").onchange=checkReflection;
+$("#self-kind").onchange=checkReflection;
+
+/* ================= BATTLE ARENA ================= */
+const battleScripts={
+  Lingkungan:[
+    {
+      lines:["Pergi ke pasar membeli ikan","Pulang membawa buah kedondong",
+        "Jika sampah kita singkirkan","Sungai bersih berkat bergotong"],
+      task:"Balas ajakan menjaga sungai dengan satu tindakan yang bisa dilakukan bersama."
+    },
+    {
+      lines:["Burung merpati terbang ke taman","Hinggap sebentar di pohon jati",
+        "Mari bergerak bersama teman","Merawat bumi sepenuh hati"],
+      task:"Usulkan kegiatan bersama. Sampaikan dengan kata yang ramah."
+    },
+    {
+      lines:["Jalan pagi melihat taman","Bunga melati dekat jembatan",
+        "Terima kasih wahai teman","Mari lanjutkan jadi kebiasaan"],
+      task:"Tutup percakapan dengan komitmen menjaga kebiasaan baik."
+    }
+  ],
+  Persahabatan:[
+    {
+      lines:["Pergi ke taman membawa ketan","Duduk sebentar di bawah jati",
+        "Senang rasanya berjumpa teman","Banyak cerita menghangatkan hati"],
+      task:"Balas sapaan TUNU dengan perkenalan atau ucapan hangat."
+    },
+    {
+      lines:["Ke tepi sungai membawa jala","Melihat ikan berenang perlahan",
+        "Jika kawan menghadapi kendala","Mari temani penuh perhatian"],
+      task:"Sampaikan dukungan kepada teman yang sedang kesulitan."
+    },
+    {
+      lines:["Burung merpati hinggap di batu","Terbang kembali menjelang petang",
+        "Walau terpisah jarak dan waktu","Semoga teman selalu terkenang"],
+      task:"Akhiri dengan pesan untuk menjaga persahabatan."
+    }
+  ]
+};
+let battle={active:false,mode:"virtual",theme:"Lingkungan",turn:0,entries:[],id:null};
+let ticker=null;
+let seconds=90;
+let recording=null;
+let recorder=null;
+let micStream=null;
+let chunks=[];
+let pendingAudio=null;
+let audioURLs=[];
+let discardRecording=false;
+
+function addMessage(sender,text,type="bot",audio=null){
+  const div=document.createElement("div");
+  div.className="message "+type;
+  if(sender){
+    const label=document.createElement("b");label.textContent=sender;
+    div.appendChild(label);
+  }
+  div.appendChild(document.createTextNode(text));
+  if(audio){
+    const player=document.createElement("audio");
+    player.controls=true;player.src=audio;div.appendChild(player);
+  }
+  $("#chat").appendChild(div);
+  $("#chat").scrollTop=$("#chat").scrollHeight;
+}
+function lockSetup(active){
+  ["battle-mode","battle-theme","timed"].forEach(id=>$("#"+id).disabled=active);
+  $("#start-battle").disabled=active;
+  $("#end-battle").disabled=!active;
+  $("#battle-input").disabled=!active;
+  $("#send-battle").disabled=!active;
+  $("#record").disabled=!active;
+}
+function stopTimer(){clearInterval(ticker);ticker=null}
+function beginTimer(){
+  stopTimer();
+  seconds=90;
+  if(!$("#timed").checked){$("#timer").textContent="∞";return}
+  renderTimer();
+  ticker=setInterval(()=>{
+    seconds--;renderTimer();
+    if(seconds<=0){
+      stopTimer();
+      $("#send-battle").disabled=true;
+      $("#battle-input").disabled=true;
+      $("#record").disabled=true;
+      cancelRecording();
+      addMessage("","Waktu giliran habis. Sesi berakhir; balasan yang sudah terkirim tetap dicatat.","system");
+      finishBattle("Waktu habis");
+    }
+  },1000);
+}
+function renderTimer(){
+  $("#timer").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+}
+function nextTurn(){
+  if(!battle.active) return;
+  if(battle.mode==="virtual"){
+    const script=battleScripts[battle.theme][battle.turn];
+    addMessage("TUNU · DEMO",script.lines.join("\n"));
+    $("#battle-task").textContent=`Ronde ${battle.turn+1}/3: ${script.task}`;
+    $("#reply-label").textContent="Giliranmu · empat baris";
+  }else{
+    const player=battle.turn%2===0?"Pemain A":"Pemain B";
+    const round=Math.floor(battle.turn/2)+1;
+    $("#reply-label").textContent=`Giliran ${player} · ronde ${round}/3`;
+    $("#battle-task").textContent=battle.turn===0
+      ?"Pemain A: buka percakapan dengan pantun sesuai tema. Setelah mengirim, serahkan perangkat ke Pemain B."
+      :`${player}: tanggapi pesan lawan. Serahkan perangkat setelah mengirim.`;
+    addMessage("",`Giliran ${player} · ronde ${round}`,"system");
+  }
+  beginTimer();
+}
+$("#start-battle").onclick=()=>{
+  audioURLs.forEach(url=>URL.revokeObjectURL(url));audioURLs=[];
+  clearPendingAudio();
+  battle={
+    active:true,id:uid(),turn:0,entries:[],
+    mode:$("#battle-mode").value,theme:$("#battle-theme").value
+  };
+  $("#chat").replaceChildren();
+  $("#battle-input").value="";
+  $("#battle-result").classList.remove("show");
+  $("#battle-result").replaceChildren();
+  lockSetup(true);
+  addMessage("","Pantun demo buatan aplikasi. Penilaian otomatis terbatas pada struktur dan kemiripan akhir tulisan.","system");
+  nextTurn();
+};
+$("#end-battle").onclick=()=>askConfirm(
+  "Akhiri sesi?","Balasan yang sudah dikirim akan masuk rekap.",
+  ()=>finishBattle("Diakhiri pengguna")
+);
+$("#send-battle").onclick=()=>{
+  if(!battle.active) return;
+  if(recorder?.state==="recording"){toast("Hentikan rekaman sebelum mengirim.");return}
+  const lines=$("#battle-input").value.trim().split(/\n/).map(l=>l.trim()).filter(Boolean);
+  if(lines.length!==4){toast("Tulis tepat empat baris, dipisahkan Enter.");return}
+  const sender=battle.mode==="virtual"?"KAMU":battle.turn%2===0?"PEMAIN A":"PEMAIN B";
+  const check=basicCheck(lines);
+  addMessage(sender,lines.join("\n"),"me",pendingAudio?.url);
+  battle.entries.push({
+    sender,lines,check:{pairA:check.pairA,pairB:check.pairB},voice:!!pendingAudio
+  });
+  state.metrics.battle++;
+  reward("battle-turn-"+battle.id+"-"+battle.turn,5);
+  markActivity();persist();
+  pendingAudio=null;
+  $("#record-preview").classList.add("hidden");
+  $("#record-preview").removeAttribute("src");
+  $("#remove-record").classList.add("hidden");
+  $("#record-status").textContent="";
+  $("#battle-input").value="";
+  battle.turn++;
+  const maxTurns=battle.mode==="virtual"?3:6;
+  if(battle.turn>=maxTurns) finishBattle("Selesai");
+  else nextTurn();
+};
+
+function finishBattle(reason){
+  if(!battle.active) return;
+  battle.active=false;stopTimer();cancelRecording();clearPendingAudio();
+  lockSetup(false);
+  $("#timer").textContent="Selesai";
+  $("#battle-task").textContent="Baca ulang percakapanmu. Apakah balasanmu menjawab pesan lawan dan sesuai situasinya?";
+  const saved={
+    id:battle.id,date:new Date().toISOString(),mode:battle.mode,
+    theme:battle.theme,reason,entries:battle.entries,
+    relevant:null,polite:null
+  };
+  if(saved.entries.length){
+    state.battles.unshift(saved);
+    if(reason==="Selesai") reward("battle-finish-"+battle.id,20);
+    persist();
+  }
+  const matches=battle.entries.reduce((n,e)=>n+Number(e.check.pairA)+Number(e.check.pairB),0);
+  $("#battle-result").innerHTML=`
+    <div class="feedback-item good"><b>${reason==="Selesai"?"🎉 Battle selesai!":"Rekap sesi"}</b><br>
+      ${battle.entries.length} balasan terkirim.<br>
+      ${matches} dari ${battle.entries.length*2} pasangan baris memiliki dua huruf akhir yang sama.
+      Ini bukan skor mutu atau penilaian bunyi yang pasti.</div>
+    <div class="feedback-item">
+      <b>Refleksi pertandingan</b><br>
+      <label><input type="checkbox" id="battle-relevant" style="width:auto"> Balasan kami relevan dengan pesan sebelumnya.</label><br>
+      <label><input type="checkbox" id="battle-polite" style="width:auto"> Pilihan kata kami santun untuk situasinya.</label>
+      <p class="notice">Dinilai sendiri; belum dianalisis AI.</p>
+    </div>
+    <button class="btn soft" id="save-battle-poem" ${!battle.entries.length?"disabled":""}>Simpan balasan terakhir sebagai karya</button>`;
+  $("#battle-result").classList.add("show");
+  ["battle-relevant","battle-polite"].forEach((id,index)=>{
+    $("#"+id).onchange=()=>{
+      const record=state.battles.find(b=>b.id===battle.id);
+      if(record){
+        record[index===0?"relevant":"polite"]=$("#"+id).checked;
+        persist();
+      }
+    };
+  });
+  $("#save-battle-poem").onclick=()=>{
+    const last=battle.entries.at(-1);
+    if(!last) return;
+    const id="battle-poem-"+battle.id;
+    if(state.poems.some(p=>p.id===id)){toast("Balasan ini sudah disimpan.");return}
+    state.poems.unshift({
+      id,title:"Balasan "+battle.theme,theme:battle.theme,
+      intention:"Latihan berbalas pantun",lines:[...last.lines],
+      date:new Date().toISOString(),versions:[]
+    });
+    reward("poem-"+id,20,"write");persist();updateStats();
+    toast(storageOK?"Balasan tersimpan di My Journey.":"Tersimpan sementara; cadangkan data.");
+  };
+  updateStats();
+}
+
+/* Rekaman suara */
+function clearPendingAudio(){
+  if(pendingAudio){
+    URL.revokeObjectURL(pendingAudio.url);
+    audioURLs=audioURLs.filter(u=>u!==pendingAudio.url);
+  }
+  pendingAudio=null;
+  $("#record-preview").pause();
+  $("#record-preview").removeAttribute("src");
+  $("#record-preview").classList.add("hidden");
+  $("#remove-record").classList.add("hidden");
+  $("#record-status").textContent="";
+}
+function cancelRecording(){
+  discardRecording=true;
+  if(recorder?.state==="recording") recorder.stop();
+  micStream?.getTracks().forEach(t=>t.stop());
+  clearTimeout(recording);
+  $("#record").textContent="🎙 Rekam suara";
+}
+$("#record").onclick=async()=>{
+  if(recorder?.state==="recording"){
+    recorder.stop();return;
+  }
+  if(!battle.active) return;
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){
+    toast("Rekaman memerlukan browser yang mendukung mikrofon pada konteks aman.");return;
+  }
+  $("#record").disabled=true;
+  try{
+    micStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    if(!battle.active){
+      micStream.getTracks().forEach(t=>t.stop());return;
+    }
+    clearPendingAudio();
+    chunks=[];discardRecording=false;
+    recorder=new MediaRecorder(micStream);
+    recorder.ondataavailable=e=>{if(e.data.size) chunks.push(e.data)};
+    recorder.onstop=()=>{
+      clearTimeout(recording);
+      micStream?.getTracks().forEach(t=>t.stop());
+      $("#record").textContent="🎙 Rekam suara";
+      $("#record").disabled=!battle.active;
+      if(discardRecording||!battle.active) return;
+      const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});
+      if(!blob.size){toast("Rekaman kosong. Coba lagi.");return}
+      const url=URL.createObjectURL(blob);audioURLs.push(url);
+      pendingAudio={blob,url};
+      $("#record-preview").src=url;
+      $("#record-preview").classList.remove("hidden");
+      $("#remove-record").classList.remove("hidden");
+      $("#record-status").textContent="Rekaman siap dilampirkan pada balasan teks.";
+    };
+    recorder.start();
+    $("#record").disabled=false;
+    $("#record").textContent="⏹ Hentikan rekaman";
+    $("#record-status").textContent="Merekam... maksimal 60 detik.";
+    recording=setTimeout(()=>{if(recorder.state==="recording") recorder.stop()},60000);
+  }catch(e){
+    micStream?.getTracks().forEach(t=>t.stop());
+    $("#record").disabled=!battle.active;
+    toast("Mikrofon tidak tersedia atau izinnya belum diberikan.");
+  }
+};
+$("#remove-record").onclick=clearPendingAudio;
+window.addEventListener("pagehide",()=>{
+  stopTimer();cancelRecording();window.speechSynthesis?.cancel();
+  audioURLs.forEach(u=>URL.revokeObjectURL(u));
+});
+
+/* ================= MY JOURNEY ================= */
+function renderJourney(){
+  updateStats();
+  const level=Math.floor(state.xp/100)+1;
+  $("#journey-level").textContent=`Level ${level} · Perangkai Cerita`;
+  $("#journey-xp").textContent=`${state.xp} XP terkumpul · ${100-state.xp%100} XP menuju level berikutnya · streak ${streak()} hari`;
+  $("#xp-progress").style.width=state.xp%100+"%";
+  const badgeData=[
+    ["🌱","Langkah Pertama",state.metrics.learn>=1],
+    ["🎵","Rima Explorer",rhymeQuestions.every((_,i)=>state.rewards.includes("rhyme-"+i))],
+    ["📝","Kreator Pantun",state.poems.length>=1],
+    ["⚔️","Battle Finisher",state.battles.some(b=>b.reason==="Selesai")]
+  ];
+  $("#badges").innerHTML=badgeData.map(([icon,label,earned])=>
+    `<div class="badge ${earned?"earned":""}"><span>${icon}</span>${label}<br><small>${earned?"Terbuka":"Terkunci"}</small></div>`).join("");
+  const center=[150,115];
+  const vertices=[[150,35],[230,90],[200,180],[100,180],[70,90]];
+  const metricKeys=["learn","write","revise","reflect","battle"];
+  $("#radar-shape").setAttribute("points",vertices.map((v,i)=>{
+    const amount=Math.min(5,Math.max(0,Number(state.metrics[metricKeys[i]])||0))/5;
+    return [
+      center[0]+(v[0]-center[0])*amount,
+      center[1]+(v[1]-center[1])*amount
+    ].join(",");
+  }).join(" "));
+  renderCollection();
+  $("#battle-history").innerHTML=state.battles.length
+    ?state.battles.map(b=>`
+      <details class="history-item">
+        <summary>${esc(b.theme)} · ${b.mode==="friend"?"Teman lokal":"TUNU demo"} · ${dateLabel(b.date)} · ${esc(b.reason)}</summary>
+        ${(b.entries||[]).map(e=>`
+          <p><b>${esc(e.sender)}</b><br>${e.lines.map(esc).join("<br>")}
+          ${e.voice?"<br><small>Memakai rekaman dalam sesi; audio tidak disimpan.</small>":""}</p>`).join("")}
+        <small>Refleksi relevansi: ${b.relevant===true?"Ya":b.relevant===false?"Belum":"Belum diisi"}.
+        Kesantunan: ${b.polite===true?"Ya":b.polite===false?"Belum":"Belum diisi"}.</small>
+      </details>`).join("")
+    :'<p class="notice">Selesaikan satu sesi di Battle Arena untuk melihat rekap di sini.</p>';
+}
+function renderCollection(){
+  const query=$("#search").value.toLowerCase().trim();
+  const poems=state.poems.filter(p=>[p.title,p.theme,...p.lines].join(" ").toLowerCase().includes(query));
+  $("#collection").innerHTML=poems.length?poems.map(p=>`
+    <article class="poem-card">
+      <span class="tag purple">${esc(p.theme)}</span>
+      <h3>${esc(p.title)}</h3>
+      <small>${dateLabel(p.updated||p.date)} · ${(p.versions||[]).length} revisi</small>
+      <p class="text">${p.lines.map(esc).join("\n")}</p>
+      <div class="actions">
+        <button class="btn small soft" data-edit="${esc(p.id)}">Revisi</button>
+        <button class="btn small outline" data-card="${esc(p.id)}">Kartu PNG</button>
+        <button class="btn small danger" data-delete="${esc(p.id)}">Hapus</button>
+      </div>
+      ${(p.versions||[]).length?`<details><summary>Lihat riwayat</summary>
+      ${p.versions.map((v,i)=>`<p class="notice" style="white-space:pre-line"><b>Versi ${i+1}</b>\n${esc(v.lines.join("\n"))}</p>`).join("")}
+      </details>`:""}
+    </article>`).join("")
+    :`<div class="empty"><span style="font-size:40px">📖</span><h3>${query?"Belum ada hasil":"Cerita pertamamu menunggu"}</h3>
+      <p>${query?"Coba kata pencarian lain.":"Simpan pantun dari PantunLab atau Battle Arena."}</p></div>`;
+}
+$("#search").oninput=renderCollection;
+$("#collection").onclick=e=>{
+  const b=e.target.closest("button");
+  if(!b) return;
+  const id=b.dataset.edit||b.dataset.card||b.dataset.delete;
+  const poem=state.poems.find(p=>p.id===id);
+  if(!poem) return;
+  if(b.dataset.edit){
+    const open=()=>{
+      loadDraft({...poem,editingId:poem.id,mode:"independent"});
+      saveDraft();navigate("lab");
+    };
+    if(editorLines.some(l=>l.value.trim())&&editingId!==poem.id){
+      askConfirm("Buka karya ini?","Draf editor saat ini akan diganti. Simpan draf dahulu jika masih diperlukan.",open);
+    }else open();
+  }
+  if(b.dataset.card) makeCard(poem);
+  if(b.dataset.delete) askConfirm(
+    "Hapus karya?","Karya dan seluruh versi revisinya akan dihapus dari koleksi ini.",
+    ()=>{
+      state.poems=state.poems.filter(p=>p.id!==id);
+      if(editingId===id){editingId=null;saveDraft()}
+      persist();renderJourney();toast("Karya dihapus.");
+    }
+  );
+};
+
+/* Kartu PNG */
+let cardBlob=null;
+let cardURL=null;
+let cardFileName="tunplay-pantun.png";
+function wrapText(ctx,text,maxWidth){
+  const words=text.split(/\s+/);
+  const result=[];let line="";
+  for(const word of words){
+    const candidate=line?line+" "+word:word;
+    if(ctx.measureText(candidate).width<=maxWidth){line=candidate;continue}
+    if(line) result.push(line);
+    if(ctx.measureText(word).width<=maxWidth){line=word;continue}
+    let fragment="";
+    for(const char of word){
+      if(ctx.measureText(fragment+char).width>maxWidth){
+        result.push(fragment);fragment=char;
+      }else fragment+=char;
+    }
+    line=fragment;
+  }
+  if(line) result.push(line);
+  return result.length?result:[""];
+}
+function makeCard(poem){
+  const canvas=document.createElement("canvas");
+  canvas.width=1080;
+  const ctx=canvas.getContext("2d");
+  ctx.font="bold 56px sans-serif";
+  const titleLines=wrapText(ctx,poem.title,850);
+  ctx.font="36px sans-serif";
+  const poemLines=poem.lines.map(l=>wrapText(ctx,l,850));
+  const bodyHeight=poemLines.reduce((n,a)=>n+a.length*59+25,0);
+  canvas.height=Math.max(1080,330+titleLines.length*70+bodyHeight+160);
+  const h=canvas.height;
+  const grad=ctx.createLinearGradient(0,0,1080,h);
+  grad.addColorStop(0,"#7956ed");grad.addColorStop(1,"#b889ed");
+  ctx.fillStyle=grad;ctx.fillRect(0,0,1080,h);
+  ctx.fillStyle="#ffdb7a";ctx.beginPath();ctx.arc(1020,65,160,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#ff97c0";ctx.beginPath();ctx.arc(20,h-30,160,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#ffffff";ctx.fillRect(65,170,950,h-285);
+  ctx.fillStyle="#fff";ctx.font="bold 40px sans-serif";ctx.fillText("TUNPLAY.",80,95);
+  ctx.font="20px sans-serif";ctx.fillText("PLAY, RHYME, SHINE!",80,130);
+  let y=260;
+  ctx.fillStyle="#7451d9";ctx.font="bold 22px sans-serif";
+  ctx.fillText(String(poem.theme).toUpperCase(),115,y);
+  y+=75;
+  ctx.fillStyle="#332746";ctx.font="bold 56px sans-serif";
+  for(const line of titleLines){ctx.fillText(line,115,y);y+=70}
+  y+=35;ctx.font="36px sans-serif";
+  for(const group of poemLines){
+    for(const line of group){ctx.fillText(line,115,y);y+=59}
+    y+=25;
+  }
+  ctx.fillStyle="#ffffff";ctx.font="22px sans-serif";
+  ctx.fillText("Dirangkai oleh Sahabat Pantun · TUNPLAY",80,h-55);
+  canvas.toBlob(blob=>{
+    if(!blob){toast("Kartu belum berhasil dibuat.");return}
+    if(cardURL) URL.revokeObjectURL(cardURL);
+    cardBlob=blob;cardURL=URL.createObjectURL(blob);
+    cardFileName="tunplay-"+Date.now()+".png";
+    $("#card-preview").src=cardURL;
+    $("#card-dialog").showModal();
+  },"image/png");
+}
+function downloadURL(url,filename){
+  const a=document.createElement("a");
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+}
+$("#download-card").onclick=()=>{if(cardURL) downloadURL(cardURL,cardFileName)};
+$("#share-card").onclick=async()=>{
+  if(!cardBlob) return;
+  try{
+    const file=new File([cardBlob],cardFileName,{type:"image/png"});
+    if(navigator.canShare?.({files:[file]})){
+      await navigator.share({files:[file],title:"Pantunku di TUNPLAY"});
+    }else{
+      downloadURL(cardURL,cardFileName);
+      toast("Kartu diunduh. Bagikan melalui aplikasi pilihanmu.");
+    }
+  }catch(e){
+    if(e.name!=="AbortError") toast("Belum dapat membagikan. Gunakan Unduh PNG.");
+  }
+};
+$("#close-card").onclick=()=>$("#card-dialog").close();
+$("#export-data").onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  downloadURL(url,"tunplay-cadangan-"+localDay()+".json");
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast("Cadangan JSON diunduh.");
+};
+
+/* ================= INIT ================= */
+renderRhyme();
+renderSortGame();
+renderWords();
+loadDraft(state.draft);
+describeMode();
+renderLabHistory();
+updateStats();
+persist();
+</script>
+</body>
+</html>
